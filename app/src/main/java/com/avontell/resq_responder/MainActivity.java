@@ -39,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
 
     @Override
+    public void onBackPressed() {
+        mViewPager.setCurrentItem(1, true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
