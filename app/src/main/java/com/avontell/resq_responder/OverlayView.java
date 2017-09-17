@@ -161,7 +161,7 @@ public class OverlayView extends View implements SensorEventListener {
 
         Location lastLocation = ((MainActivity) getContext()).getLocation();
 
-        if (lastLocation != null) {
+        if (lastLocation != null && peopleLocations != null) {
             for (Location loc : peopleLocations) {
                 float curBearingToMW = lastLocation.bearingTo(loc);
                 // compute rotation matrix
@@ -197,8 +197,6 @@ public class OverlayView extends View implements SensorEventListener {
                     float verticalFOV = params.getVerticalViewAngle();
                     float horizontalFOV = params.getHorizontalViewAngle();
 
-                    Log.e("Updating a user", loc.getProvider());
-
                     // use roll for screen rotation
                     canvas.rotate((float) (0.0f - Math.toDegrees(orientation[2])));
                     // Translate, but normalize for the FOV of the camera -- basically, pixels per degree, times degrees == pixels
@@ -207,9 +205,6 @@ public class OverlayView extends View implements SensorEventListener {
 
                     // wait to translate the dx so the horizon doesn't get pushed off
                     canvas.translate(0.0f, 0.0f - dy);
-
-                    Log.e("WDITH", "" + (dx + canvas.getWidth()));
-                    Log.e("DX", "" + dx);
 
                     if (dx > canvas.getWidth() / 2) {
                         Log.e("POS", "OFF SCREEN");

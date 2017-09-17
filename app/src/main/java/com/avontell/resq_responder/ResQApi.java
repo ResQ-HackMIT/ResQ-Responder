@@ -23,6 +23,7 @@ public class ResQApi {
 
     public static final String url = "http://35.196.47.57";
     public static final String LOCATION = "/location";
+    public static final String STATUS = "/api/status";
     public static final String RESPONDER = "/api/auth/firstresponder";
     public static final String TRIAGE = "/api/triage";
     public static final String USER = "/auth/user";
@@ -94,6 +95,29 @@ public class ResQApi {
         } catch (IOException e) {
             e.printStackTrace();
             return new JSONArray();
+        }
+
+    }
+
+    public static JSONObject getStatus() {
+
+        try {
+
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+                    .url(url + STATUS)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            return new JSONObject(response.body().string());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return new JSONObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JSONObject();
         }
 
     }

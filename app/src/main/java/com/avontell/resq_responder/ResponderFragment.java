@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -110,8 +112,56 @@ public class ResponderFragment extends Fragment {
         updateDisasterInfo(DisasterStatus.AFTERMATH, "Hurricane Irma", "Category 5 hurricane heading toward Florida.");
         updateTeam("Alpha Blue Dogs");
         updateResqueue();
+        new UpdateStatusTask().execute();
 
         return rootView;
+    }
+
+    class UpdateStatusTask extends AsyncTask<Void, Void, Void> {
+
+        JSONObject result;
+
+        @Override
+        protected Void doInBackground(Void ... voids) {
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            result = ResQApi.getStatus();
+            Log.e("RESULT", result.toString());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            DisasterStatus stat = DisasterStatus.IN_PROGRESS;
+            try {
+                switch (result.getString("status")) {
+                    case "In progress":
+                        stat = DisasterStatus.IN_PROGRESS;
+                        break;
+                    case "Clear":
+                        stat = DisasterStatus.CLEAR;
+                        break;
+                    case "Approaching":
+                        stat = DisasterStatus.APPROACHING;
+                        break;
+                    case "Aftermath":
+                        stat = DisasterStatus.AFTERMATH;
+                        break;
+                }
+                updateDisasterInfo(stat, result.getString("title"), result.getString("description"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            new UpdateStatusTask().execute();
+
+        }
     }
 
     class UpdateResqueueTask extends AsyncTask<Void, Void, Void> {
@@ -201,18 +251,6 @@ public class ResponderFragment extends Fragment {
                 }
             }
 
-        }
-
-    }
-
-    class UpdateStatusTask extends AsyncTask<Void, Void, Void> {
-
-        JSONObject result;
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            //result = ResQApi.get();
-            return null;
         }
 
     }

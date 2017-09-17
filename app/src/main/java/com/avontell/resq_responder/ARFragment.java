@@ -110,6 +110,11 @@ public class ARFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             result = ResQApi.getTriage();
             return null;
         }
@@ -128,6 +133,8 @@ public class ARFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            new UpdateResqueueTask().execute();
 
         }
     }
