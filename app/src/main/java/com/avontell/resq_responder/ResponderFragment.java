@@ -175,6 +175,28 @@ public class ResponderFragment extends Fragment {
             return null;
         }
 
+        private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+            dist = Math.acos(dist);
+            dist = rad2deg(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit == "K") {
+                dist = dist * 1.609344;
+            } else if (unit == "N") {
+                dist = dist * 0.8684;
+            }
+
+            return (dist);
+        }
+        private double deg2rad(double deg) {
+            return (deg * Math.PI / 180.0);
+        }
+        private double rad2deg(double rad) {
+            return (rad * 180 / Math.PI);
+        }
+
+
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -199,8 +221,8 @@ public class ResponderFragment extends Fragment {
                     double lat = person.getJSONArray("location").getJSONObject(0).getDouble("lat");
                     double lon = person.getJSONArray("location").getJSONObject(0).getDouble("long");
                     if (myLocation != null) {
-                        double approxDist = Math.sqrt(Math.pow(myLocation.getLatitude() - lat, 2) + Math.pow(myLocation.getLongitude() - lon, 2));
-                        distanceView.setText("" + formatter.format(approxDist) + "mi");
+                        double approxDist = distance(myLocation.getLatitude(), myLocation.getLongitude(), lat, lon, "M");
+                        distanceView.setText(formatter.format(approxDist) + "mi");
                     } else {
                         distanceView.setText("1.2 mi");
                     }
@@ -224,7 +246,9 @@ public class ResponderFragment extends Fragment {
                                         + "Number of kids: " + person.getInt("kids") + "\n"
                                         + "Number of animals: " + person.getInt("animals") + "\n"
                                         + "Has spouse?: " + (person.getBoolean("spouse") ? "Yes" : "No") + "\n"
-                                        + "Has vehicle: " + (person.getBoolean("hasTransportation") ? "Yes" : "No"));
+                                        + "Has vehicle: " + (person.getBoolean("hasTransportation") ? "Yes" : "No") + "\n"
+                                        + "Proximity: " + person.getInt("locationProximity")
+                                );
 
                                 String positiveText = "ResQ Maps";
                                 builder.setPositiveButton(positiveText,
