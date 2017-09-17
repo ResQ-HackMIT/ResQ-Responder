@@ -2,6 +2,7 @@ package com.avontell.resq_responder;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -179,11 +180,11 @@ public class ResponderFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            int[] colorList = new int[]{R.color.gradOne,R.color.gradTwo,R.color.gradThree,R.color.gradFour,R.color.gradFive};
+            int[] colorList = new int[]{R.color.gradOne,R.color.gradOne,R.color.gradOne,R.color.gradTwo,R.color.gradTwo,R.color.gradTwo,R.color.gradThree,R.color.gradThree,R.color.gradThree,R.color.gradFour,R.color.gradFour,R.color.gradFour,R.color.gradFive,R.color.gradFive,R.color.gradFive};
 
             NumberFormat formatter = new DecimalFormat("#0.0");
             resqueueView.removeAllViews();
-            for (int i = 0; i <= 4; i++) {
+            for (int i = 0; i <= 15; i++) {
                 try {
 
                     final JSONObject person = result.getJSONObject(i);
