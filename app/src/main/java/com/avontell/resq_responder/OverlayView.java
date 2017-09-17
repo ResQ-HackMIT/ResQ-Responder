@@ -206,11 +206,14 @@ public class OverlayView extends View implements SensorEventListener {
                     // wait to translate the dx so the horizon doesn't get pushed off
                     canvas.translate(0.0f, 0.0f - dy);
 
-                    if (dx > canvas.getWidth() / 2) {
-                        Log.e("POS", "OFF SCREEN");
+                    //Log.e("POS", "Dx: " + dx + ", width: " + canvas.getWidth());
+                    Log.e("POS", "Dy: " + dy + ", height: " + canvas.getHeight());
+                    if (dx > canvas.getWidth() / 2
+                            || dx < canvas.getWidth() / -2
+                            || dy > canvas.getHeight() / 2
+                            || dy < canvas.getHeight() / -2) {
                         arFrag.acceptARUpdate(loc.getProvider(), false);
                     } else {
-                        Log.e("POS", "ON SCREEN");
                         arFrag.acceptARUpdate(loc.getProvider(), true);
                     }
 

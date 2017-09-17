@@ -68,9 +68,6 @@ public class ARFragment extends Fragment {
     private boolean currentlyShowing = false;
 
     public void acceptARUpdate(String provider, boolean visible) {
-
-        Log.e("BOOLZ", "" + visible + " " + currentlyShowing);
-
         if (visible && !currentlyShowing) {
             arCard.setVisibility(View.VISIBLE);
             arCard.setTranslationY(arCard.getHeight() * 1.3f);
