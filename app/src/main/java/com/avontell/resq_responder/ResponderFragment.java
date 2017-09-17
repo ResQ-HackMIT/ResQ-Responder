@@ -19,6 +19,7 @@ public class ResponderFragment extends Fragment {
     private TextView quickTitle;
     private TextView quickExtra;
     private ImageView quickIcon;
+    private TextView teamView;
 
     public ResponderFragment() {
 
@@ -64,7 +65,11 @@ public class ResponderFragment extends Fragment {
     }
 
     public void updateTeam(String team) {
-
+        if (team == null) {
+            teamView.setText("Unassigned");
+        } else {
+            teamView.setText(team);
+        }
     }
 
     public void updateResqueue() {
@@ -85,9 +90,11 @@ public class ResponderFragment extends Fragment {
         quickTitle = rootView.findViewById(R.id.quick_title);
         quickIcon = rootView.findViewById(R.id.quick_icon);
         quickExtra = rootView.findViewById(R.id.quick_info);
+        teamView = rootView.findViewById(R.id.team_view);
 
         //updateDisasterInfo(DisasterStatus.CLEAR, null, null);
-        updateDisasterInfo(DisasterStatus.IMPENDING, "Hurricane Irma", "Category 5 hurricane heading toward Florida.");
+        updateDisasterInfo(DisasterStatus., "Hurricane Irma", "Category 5 hurricane heading toward Florida.");
+        updateTeam("Alpha Blue Dogs");
 
         return rootView;
     }
