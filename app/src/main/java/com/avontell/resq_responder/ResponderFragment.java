@@ -109,7 +109,7 @@ public class ResponderFragment extends Fragment {
         resqueueView = rootView.findViewById(R.id.resqueue);
 
         //updateDisasterInfo(DisasterStatus.CLEAR, null, null);
-        updateDisasterInfo(DisasterStatus.AFTERMATH, "Hurricane Irma", "Category 5 hurricane heading toward Florida.");
+        updateDisasterInfo(DisasterStatus.IN_PROGRESS, "Loading...", "Loading your alert information.");
         updateTeam("Alpha Blue Dogs");
         updateResqueue();
         new UpdateStatusTask().execute();
