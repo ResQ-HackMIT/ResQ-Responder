@@ -215,7 +215,16 @@ public class ResponderFragment extends Fragment {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                                 builder.setTitle(person.getString("name"));
-                                builder.setMessage("Umm");
+                                builder.setMessage("Medical condition status: " + person.getInt("medicalConditions") + "\n"
+                                        + "Allergy status: " + person.getInt("allergies") + "\n"
+                                        + "Medication status: " + person.getInt("medications") + "\n"
+                                        + "Height: " + person.getInt("height") + " inches\n"
+                                        + "Weight: " + person.getInt("weight") + " lbs.\n"
+                                        + "Age: " + person.getInt("age") + "\n"
+                                        + "Number of kids: " + person.getInt("kids") + "\n"
+                                        + "Number of animals: " + person.getInt("animals") + "\n"
+                                        + "Has spouse?: " + (person.getBoolean("spouse") ? "Yes" : "No") + "\n"
+                                        + "Has vehicle: " + (person.getBoolean("hasTransportation") ? "Yes" : "No"));
 
                                 String positiveText = "ResQ Maps";
                                 builder.setPositiveButton(positiveText,
@@ -226,7 +235,7 @@ public class ResponderFragment extends Fragment {
                                             }
                                         });
 
-                                String negativeText = getString(android.R.string.cancel);
+                                String negativeText = getString(android.R.string.ok);
                                 builder.setNegativeButton(negativeText,
                                         new DialogInterface.OnClickListener() {
                                             @Override
