@@ -1,5 +1,7 @@
 package com.avontell.resq_responder;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -7,7 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * The home page of the responder's application
@@ -20,6 +26,7 @@ public class ResponderFragment extends Fragment {
     private TextView quickExtra;
     private ImageView quickIcon;
     private TextView teamView;
+    private LinearLayout resqueueView;
 
     public ResponderFragment() {
 
@@ -36,7 +43,7 @@ public class ResponderFragment extends Fragment {
         quickExtra.setVisibility(View.VISIBLE);
 
         switch (status) {
-            case IMPENDING:
+            case APPROACHING:
                 quickView.setCardBackgroundColor(getActivity().getColor(R.color.notifWarn));
                 quickTitle.setText(quickInfo);
                 quickExtra.setText(extraInfo);
@@ -73,7 +80,7 @@ public class ResponderFragment extends Fragment {
     }
 
     public void updateResqueue() {
-
+        new UpdateResqueueTask().execute();
     }
 
     public void addShelter() {
@@ -91,11 +98,50 @@ public class ResponderFragment extends Fragment {
         quickIcon = rootView.findViewById(R.id.quick_icon);
         quickExtra = rootView.findViewById(R.id.quick_info);
         teamView = rootView.findViewById(R.id.team_view);
+        resqueueView = rootView.findViewById(R.id.resqueue);
 
         //updateDisasterInfo(DisasterStatus.CLEAR, null, null);
-        updateDisasterInfo(DisasterStatus., "Hurricane Irma", "Category 5 hurricane heading toward Florida.");
+        updateDisasterInfo(DisasterStatus.AFTERMATH, "Hurricane Irma", "Category 5 hurricane heading toward Florida.");
         updateTeam("Alpha Blue Dogs");
+        updateResqueue();
 
         return rootView;
     }
+
+    class UpdateResqueueTask extends AsyncTask<Void, Void, Void> {
+
+        JSONArray result = new JSONArray();
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            result = ResQApi.getTriage();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            resqueueView.removeAllViews();
+            for (int i = 0; i < result.length(); i++) {
+                try {
+
+                    JSONObject person = result.getJSONObject(i);
+
+                    // Inflate and add the layout
+                    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View personView = inflater.inflate(R.layout.people_item, null);
+                    TextView personName = personView.findViewById(R.id.resq_name);
+                    personName.setText(person.getString("name"));
+                    resqueueView.addView(personView);
+
+                } catch (Exception e) {
+
+                }
+            }
+
+        }
+
+    }
+
 }

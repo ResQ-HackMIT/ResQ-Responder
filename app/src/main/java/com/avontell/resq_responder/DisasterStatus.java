@@ -6,6 +6,6 @@ package com.avontell.resq_responder;
  */
 public enum DisasterStatus {
 
-    IMPENDING, CLEAR, IN_PROGRESS, AFTERMATH
+    APPROACHING, CLEAR, IN_PROGRESS, AFTERMATH
 
 }
