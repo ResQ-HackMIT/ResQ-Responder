@@ -110,6 +110,7 @@ public class ResponderFragment extends Fragment {
 
         //updateDisasterInfo(DisasterStatus.CLEAR, null, null);
         updateDisasterInfo(DisasterStatus.CLEAR, "Loading...", "Loading your alert information.");
+        updateDisasterInfo(DisasterStatus.IN_PROGRESS, "Loading...", "Loading your alert information.");
         updateTeam("Alpha Blue Dogs");
         updateResqueue();
         new UpdateStatusTask().execute();
