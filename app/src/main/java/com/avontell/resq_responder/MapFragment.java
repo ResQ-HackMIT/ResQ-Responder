@@ -1,11 +1,17 @@
 package com.avontell.resq_responder;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,6 +19,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * A map for the responders
@@ -57,12 +69,51 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        // Add a marker in Sydney, Australia,
-        // and move the map's camera to the same location.
-        LatLng sydney = new LatLng(-33.852, 151.211);
-        googleMap.addMarker(new MarkerOptions().position(sydney)
-                .title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        map = googleMap;
+        map.setMyLocationEnabled(true);
+        new UpdateResqueueTask().execute();
+    }
+
+    class UpdateResqueueTask extends AsyncTask<Void, Void, Void> {
+
+        JSONArray result = new JSONArray();
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            result = ResQApi.getTriage();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            LatLng toMove = null;
+
+            for (int i = 0; i <= result.length(); i++) {
+                try {
+
+                    JSONObject person = result.getJSONObject(i);
+                    JSONObject location = person.getJSONArray("location").getJSONObject(0);
+                    double lat = location.getDouble("lat");
+                    double lon = location.getDouble("long");
+                    LatLng loc = new LatLng(lat, lon);
+                    map.addMarker(new MarkerOptions().position(loc)
+                            .title(person.getString("name")));
+
+                    if (toMove == null) {
+                        toMove = loc;
+                    }
+
+                } catch (Exception e) {
+
+                }
+            }
+
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(toMove, 13));
+
+        }
+
     }
 
 }

@@ -75,11 +75,6 @@ public class ResQApi {
     }
 
 
-    public static void updateLocation() {
-
-    }
-
-
     public static JSONArray getTriage() {
 
         try {

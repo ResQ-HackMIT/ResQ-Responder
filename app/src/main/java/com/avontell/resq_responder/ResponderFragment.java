@@ -1,9 +1,12 @@
 package com.avontell.resq_responder;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,9 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * The home page of the responder's application
@@ -122,17 +128,72 @@ public class ResponderFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
+            int[] colorList = new int[]{R.color.gradOne,R.color.gradTwo,R.color.gradThree,R.color.gradFour,R.color.gradFive};
+
+            NumberFormat formatter = new DecimalFormat("#0.0");
             resqueueView.removeAllViews();
-            for (int i = 0; i < result.length(); i++) {
+            for (int i = 0; i <= 4; i++) {
                 try {
 
-                    JSONObject person = result.getJSONObject(i);
+                    final JSONObject person = result.getJSONObject(i);
 
                     // Inflate and add the layout
                     LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View personView = inflater.inflate(R.layout.people_item, null);
+                    final View personView = inflater.inflate(R.layout.people_item, null);
+                    personView.setBackgroundResource(colorList[i]);
                     TextView personName = personView.findViewById(R.id.resq_name);
                     personName.setText(person.getString("name"));
+                    TextView distanceView = personView.findViewById(R.id.person_distance);
+                    Location myLocation = ((MainActivity) getActivity()).getLocation();
+                    double lat = person.getJSONArray("location").getJSONObject(0).getDouble("lat");
+                    double lon = person.getJSONArray("location").getJSONObject(0).getDouble("long");
+                    if (myLocation != null) {
+                        double approxDist = Math.sqrt(Math.pow(myLocation.getLatitude() - lat, 2) + Math.pow(myLocation.getLongitude() - lon, 2));
+                        distanceView.setText("" + formatter.format(approxDist) + "mi");
+                    } else {
+                        distanceView.setText("1.2 mi");
+                    }
+
+                    // Set the onClick behavior
+                    personView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            try {
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                builder.setTitle(person.getString("name"));
+                                builder.setMessage("Umm");
+
+                                String positiveText = "ResQ Maps";
+                                builder.setPositiveButton(positiveText,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                String negativeText = getString(android.R.string.cancel);
+                                builder.setNegativeButton(negativeText,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+
+                            } catch (Exception e) {
+
+                            }
+
+                        }
+                    });
+
                     resqueueView.addView(personView);
 
                 } catch (Exception e) {
@@ -140,6 +201,18 @@ public class ResponderFragment extends Fragment {
                 }
             }
 
+        }
+
+    }
+
+    class UpdateStatusTask extends AsyncTask<Void, Void, Void> {
+
+        JSONObject result;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            //result = ResQApi.get();
+            return null;
         }
 
     }

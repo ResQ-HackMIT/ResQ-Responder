@@ -8,10 +8,10 @@
     <path
         android:pathData="M0 0h24v24H0z" />
     <path
-        android:fillColor="@color/primaryGray"
+        android:fillColor="#009688"
         android:pathData="M 12 2 C 13.1045694997 2 14 2.89543050034 14 4 C 14 5.10456949966 13.1045694997 6 12 6 C 10.8954305003 6 10 5.10456949966 10 4 C 10 2.89543050034 10.8954305003 2 12 2 Z" />
     <path
-        android:fillColor="@color/primaryGray"
+        android:fillColor="#009688"
         android:pathData="M19 13v-2c-1.54 .02 -3.09-.75-4.07-1.83l-1.29-1.43c-.17-.19-.38-.34-.61-.45-.01
 0-.01-.01-.02-.01H13c-.35-.2-.75-.3-1.19-.26C10.76 7.11 10 8.04 10 9.09V15c0 1.1
 .9 2 2 2h5v5h2v-5.5c0-1.1-.9-2-2-2h-3v-3.45c1.29 1.07 3.25 1.94 5 1.95zm-6.17
