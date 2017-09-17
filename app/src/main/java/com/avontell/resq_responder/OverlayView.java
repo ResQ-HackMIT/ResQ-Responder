@@ -106,7 +106,7 @@ public class OverlayView extends View implements SensorEventListener {
             try {
                 JSONObject person = people.getJSONObject(i);
                 Location location = new Location(person.getString("name"));
-                JSONObject locationJ = person.getJSONArray("location").getJSONObject(0);
+                JSONObject locationJ = person.getJSONArray("location").getJSONObject(person.getJSONArray("location").length() - 1);
                 location.setLatitude(locationJ.getDouble("lat"));
                 location.setLongitude(locationJ.getDouble("long"));
                 location.setAltitude(10);
