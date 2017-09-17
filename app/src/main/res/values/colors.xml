@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="notifGood">#43A047</color>
+    <color name="notifWarn">#C62828</color>
+    <color name="notifComing">#3F51B5</color>
+    <color name="primaryGray">#78909C</color>
+
+</resources>
