@@ -27,10 +27,42 @@ import java.util.Random;
  * Created by vontell on 9/16/17.
  */
 
+class RollingAverage {
+    private int size;
+    private double total = 0d;
+    private int index = 0;
+    private double samples[];
+
+    public RollingAverage(int size) {
+        this.size = size;
+        samples = new double[size];
+        for (int i = 0; i < size; i++) samples[i] = 0d;
+    }
+
+    public void add(double x) {
+        total -= samples[index];
+        samples[index] = x;
+        total += x;
+        if (++index == size) index = 0; // cheaper than modulus
+    }
+
+    public double getAverage() {
+        return total / size;
+    }
+}
+
 public class OverlayView extends View implements SensorEventListener {
 
     private float[] lastAccelerometer = new float[3];
     private float[] lastCompass = new float[3];
+    private final int averageSize = 20;
+    private RollingAverage accXAverage = new RollingAverage(averageSize);
+    private RollingAverage accYAverage = new RollingAverage(averageSize);
+    private RollingAverage accZAverage = new RollingAverage(averageSize);
+    private RollingAverage compXAverage = new RollingAverage(averageSize);
+    private RollingAverage compYAverage = new RollingAverage(averageSize);
+    private RollingAverage compZAverage = new RollingAverage(averageSize);
+
     private Camera camera;
     private Random rand = new Random();
 
@@ -90,16 +122,20 @@ public class OverlayView extends View implements SensorEventListener {
         switch(event.sensor.getType())
         {
             case Sensor.TYPE_ACCELEROMETER:
-                if (rand.nextDouble() < 0.15) {
-                    lastAccelerometer = lowPass(event.values.clone(), lastAccelerometer);
-                }
-                //lastAccelerometer = event.values;
+                accXAverage.add(event.values[0]);
+                accYAverage.add(event.values[1]);
+                accZAverage.add(event.values[2]);
+                lastAccelerometer[0] = (float) accXAverage.getAverage();
+                lastAccelerometer[1] = (float) accYAverage.getAverage();
+                lastAccelerometer[2] = (float) accZAverage.getAverage();
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
-                if (rand.nextDouble() < 0.1) {
-                    lastCompass = lowPass(event.values.clone(), lastCompass);
-                }
-                //lastCompass = event.values;
+                compXAverage.add(event.values[0]);
+                compYAverage.add(event.values[1]);
+                compZAverage.add(event.values[2]);
+                lastCompass[0] = (float) compXAverage.getAverage();
+                lastCompass[1] = (float) compYAverage.getAverage();
+                lastCompass[2] = (float) compZAverage.getAverage();
                 break;
         }
 
